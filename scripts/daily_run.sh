@@ -9,7 +9,8 @@ echo "=== $(date) ==="
 echo "--- Ingesting data ---"
 python data/ingest.py
 
-echo "--- Running paper trader ---"
-python paper/trader.py
+# Paper trader disabled — re-enable when strategy is validated
+# echo "--- Running paper trader ---"
+# python paper/trader.py
 
 echo "--- Done ---"
