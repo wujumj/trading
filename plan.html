@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trading System — Project Plan</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      padding: 40px 24px;
+      min-height: 100vh;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #f8fafc;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #64748b;
+      margin-bottom: 36px;
+    }
+
+    .phase {
+      background: #1e2130;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .phase-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .phase-header:hover {
+      background: #252840;
+    }
+
+    .phase-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .phase-number {
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: #3b4263;
+      color: #94a3b8;
+      border-radius: 6px;
+      padding: 2px 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .phase-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+
+    .phase-progress {
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+
+    .phase-body {
+      border-top: 1px solid #2d3148;
+      padding: 8px 0;
+    }
+
+    .task {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .task:hover {
+      background: #252840;
+    }
+
+    .task input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #475569;
+      border-radius: 5px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s;
+      position: relative;
+    }
+
+    .task input[type="checkbox"]:checked {
+      background: #6366f1;
+      border-color: #6366f1;
+    }
+
+    .task input[type="checkbox"]:checked::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 6px;
+      height: 10px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .task-label {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      transition: color 0.15s;
+    }
+
+    .task.done .task-label {
+      color: #475569;
+      text-decoration: line-through;
+    }
+
+    .progress-bar-wrap {
+      height: 3px;
+      background: #2d3148;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: #6366f1;
+      transition: width 0.3s ease;
+    }
+
+    .overall {
+      background: #1e2130;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .overall-label {
+      font-size: 0.85rem;
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    .overall-bar-wrap {
+      flex: 1;
+      height: 6px;
+      background: #2d3148;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .overall-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .overall-pct {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #a5b4fc;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Trading System</h1>
+  <p class="subtitle">Automated US stock trading — project progress tracker</p>
+
+  <div class="overall">
+    <span class="overall-label">Overall progress</span>
+    <div class="overall-bar-wrap">
+      <div class="overall-bar" id="overall-bar" style="width: 0%"></div>
+    </div>
+    <span class="overall-pct" id="overall-pct">0%</span>
+  </div>
+
+  <div id="phases"></div>
+
+  <script>
+    const PHASES = [
+      {
+        id: "phase1",
+        number: "PHASE 1",
+        title: "Data Foundation",
+        tasks: [
+          { id: "p1t1", label: "TimescaleDB + Docker setup" },
+          { id: "p1t2", label: "pgAdmin connected" },
+          { id: "p1t3", label: "Project folder structure created" },
+          { id: "p1t4", label: "Python dependencies installed" },
+          { id: "p1t5", label: "data/ingest.py — pull OHLCV data into DB" },
+          { id: "p1t6", label: "Verified 2004 rows in prices table" },
+        ],
+      },
+      {
+        id: "phase2",
+        number: "PHASE 2",
+        title: "Trading Strategies",
+        tasks: [
+          { id: "p2t1", label: "strategies/sma.py — SMA crossover (20/50 day)" },
+          { id: "p2t2", label: "strategies/rsi.py — RSI overbought/oversold" },
+          { id: "p2t3", label: "strategies/macd.py — MACD signal line crossover" },
+        ],
+      },
+      {
+        id: "phase3",
+        number: "PHASE 3",
+        title: "Backtesting Engine",
+        tasks: [
+          { id: "p3t1", label: "backtest/engine.py — run strategies on historical data" },
+          { id: "p3t2", label: "Metrics: total return, max drawdown, Sharpe ratio" },
+          { id: "p3t3", label: "Compare strategies side by side" },
+        ],
+      },
+      {
+        id: "phase4",
+        number: "PHASE 4",
+        title: "Streamlit Dashboard",
+        tasks: [
+          { id: "p4t1", label: "app/main.py — ticker selector + price chart" },
+          { id: "p4t2", label: "Overlay buy/sell signals on chart" },
+          { id: "p4t3", label: "Backtest results panel" },
+          { id: "p4t4", label: "Portfolio tracker view" },
+        ],
+      },
+      {
+        id: "phase5",
+        number: "PHASE 5",
+        title: "Paper Trading",
+        tasks: [
+          { id: "p5t1", label: "Alpaca API account + sandbox setup" },
+          { id: "p5t2", label: "Connect strategy signals to Alpaca paper orders" },
+          { id: "p5t3", label: "Monitor paper portfolio in dashboard" },
+          { id: "p5t4", label: "Run paper trading for at least 4 weeks" },
+        ],
+      },
+      {
+        id: "phase6",
+        number: "PHASE 6",
+        title: "Live Trading",
+        tasks: [
+          { id: "p6t1", label: "Fund Alpaca account (start small)" },
+          { id: "p6t2", label: "Switch from paper to live mode" },
+          { id: "p6t3", label: "Set position size limits and stop-loss rules" },
+          { id: "p6t4", label: "Monitor and iterate" },
+        ],
+      },
+    ];
+
+    function loadState() {
+      try { return JSON.parse(localStorage.getItem("trading-plan") || "{}"); }
+      catch { return {}; }
+    }
+
+    function saveState(state) {
+      localStorage.setItem("trading-plan", JSON.stringify(state));
+    }
+
+    function updateOverall() {
+      const all = document.querySelectorAll(".task input[type=checkbox]");
+      const done = document.querySelectorAll(".task input[type=checkbox]:checked");
+      const pct = all.length ? Math.round((done.length / all.length) * 100) : 0;
+      document.getElementById("overall-bar").style.width = pct + "%";
+      document.getElementById("overall-pct").textContent = pct + "%";
+    }
+
+    function updatePhaseProgress(phaseEl, tasks) {
+      const total = tasks.length;
+      const done = phaseEl.querySelectorAll("input:checked").length;
+      phaseEl.querySelector(".phase-progress").textContent = `${done}/${total}`;
+      phaseEl.querySelector(".progress-bar").style.width = `${(done / total) * 100}%`;
+    }
+
+    function render() {
+      const state = loadState();
+      const container = document.getElementById("phases");
+      container.innerHTML = "";
+
+      PHASES.forEach(phase => {
+        const phaseEl = document.createElement("div");
+        phaseEl.className = "phase";
+
+        const doneCount = phase.tasks.filter(t => state[t.id]).length;
+
+        phaseEl.innerHTML = `
+          <div class="progress-bar-wrap">
+            <div class="progress-bar" style="width: ${(doneCount / phase.tasks.length) * 100}%"></div>
+          </div>
+          <div class="phase-header">
+            <div class="phase-left">
+              <span class="phase-number">${phase.number}</span>
+              <span class="phase-title">${phase.title}</span>
+            </div>
+            <span class="phase-progress">${doneCount}/${phase.tasks.length}</span>
+          </div>
+          <div class="phase-body">
+            ${phase.tasks.map(task => `
+              <label class="task ${state[task.id] ? "done" : ""}">
+                <input type="checkbox" data-id="${task.id}" ${state[task.id] ? "checked" : ""} />
+                <span class="task-label">${task.label}</span>
+              </label>
+            `).join("")}
+          </div>
+        `;
+
+        phaseEl.querySelectorAll("input[type=checkbox]").forEach(cb => {
+          cb.addEventListener("change", () => {
+            const s = loadState();
+            s[cb.dataset.id] = cb.checked;
+            saveState(s);
+            const taskEl = cb.closest(".task");
+            taskEl.classList.toggle("done", cb.checked);
+            updatePhaseProgress(phaseEl, phase.tasks);
+            updateOverall();
+          });
+        });
+
+        container.appendChild(phaseEl);
+      });
+
+      updateOverall();
+    }
+
+    render();
+  </script>
+</body>
+</html>
