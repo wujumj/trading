@@ -12,7 +12,22 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 
-WATCHLIST = ["AAPL", "TSLA", "NVDA", "SPY"]
+WATCHLIST = [
+    # Tech
+    "AAPL", "MSFT", "NVDA", "GOOGL", "META", "AMZN",
+    # Finance
+    "JPM", "GS", "BAC",
+    # EV / Auto
+    "TSLA", "F", "GM",
+    # Healthcare
+    "JNJ", "UNH", "PFE",
+    # Energy
+    "XOM", "CVX",
+    # Index ETFs
+    "SPY", "QQQ", "IWM",
+    # Additional
+    "WMT", "RBLX", "SONY", "BABA", "BIDU",
+]
 
 def get_engine():
     url = f"postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
@@ -57,7 +72,7 @@ def setup_db(engine):
     print("Database ready.")
 
 
-def ingest(engine, ticker: str, period: str = "2y"):
+def ingest(engine, ticker: str, period: str = "10y"):
     print(f"Downloading {ticker}...")
     df = yf.download(ticker, period=period, auto_adjust=True, progress=False)
 

@@ -6,7 +6,15 @@ import pandas as pd
 import numpy as np
 from strategies import sma, rsi, macd
 
-WATCHLIST = ["AAPL", "TSLA", "NVDA", "SPY"]
+WATCHLIST = [
+    "AAPL", "MSFT", "NVDA", "GOOGL", "META", "AMZN",
+    "JPM", "GS", "BAC",
+    "TSLA", "F", "GM",
+    "JNJ", "UNH", "PFE",
+    "XOM", "CVX",
+    "SPY", "QQQ", "IWM",
+    "WMT", "RBLX", "SONY", "BABA", "BIDU",
+]
 INITIAL_CAPITAL = 10_000.0  # per ticker per strategy run
 
 
