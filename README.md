@@ -127,14 +127,83 @@ streamlit run app/main.py
 
 ---
 
+## Alpaca Paper Trading Setup
+
+### 1. Create an Alpaca account
+
+Go to [alpaca.markets](https://alpaca.markets) and sign up. Choose **"Stock trading for individuals and business accounts"**.
+
+### 2. Generate paper trading API keys
+
+1. Log in to [app.alpaca.markets](https://app.alpaca.markets)
+2. Make sure the top-left shows **Paper** (not Live)
+3. Click **API** in the left sidebar
+4. Click **Generate New Key** — copy both the Key ID and Secret Key (secret shown once only)
+
+### 3. Add keys to `.env`
+
+```
+ALPACA_API_KEY=PKxxxxxxxxxxxxxxxx
+ALPACA_SECRET_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+ALPACA_BASE_URL=https://paper-api.alpaca.markets
+```
+
+### 4. Run the paper trader manually
+
+```bash
+source venv/bin/activate
+python paper/trader.py
+```
+
+---
+
+## Cron Job — Daily Auto-Run
+
+The system is set up to automatically ingest fresh market data and run the paper trader every weekday at **2pm PT (5pm ET)**, one hour after US market close.
+
+### View the current cron job
+
+```bash
+crontab -l
+```
+
+### Remove the cron job
+
+```bash
+crontab -e
+```
+Delete the line that contains `daily_run.sh`, save and exit.
+
+Or remove it in one command:
+
+```bash
+crontab -l | grep -v "daily_run.sh" | crontab -
+```
+
+### Check the run log
+
+```bash
+cat "/Users/jerrymao/Documents/Jiren Mao/trading/scripts/daily_run.log"
+```
+
+### Re-add the cron job (if removed)
+
+```bash
+(crontab -l 2>/dev/null; echo '0 14 * * 1-5 "/Users/jerrymao/Documents/Jiren Mao/trading/scripts/daily_run.sh" >> "/Users/jerrymao/Documents/Jiren Mao/trading/scripts/daily_run.log" 2>&1') | crontab -
+```
+
+> Note: cron only runs when the Mac is awake. If the Mac is asleep at 2pm, run `python data/ingest.py` manually that day.
+
+---
+
 ## Roadmap
 
 - [x] Project scaffold and database setup
-- [ ] Data ingestion — pull historical prices into TimescaleDB
-- [ ] Strategy 1 — SMA Crossover
-- [ ] Strategy 2 — RSI
-- [ ] Strategy 3 — MACD
-- [ ] Backtesting engine with metrics (return, drawdown, Sharpe ratio)
-- [ ] Streamlit dashboard — signal viewer and portfolio tracker
-- [ ] Paper trading via Alpaca API
+- [x] Data ingestion — pull historical prices into TimescaleDB
+- [x] Strategy 1 — SMA Crossover
+- [x] Strategy 2 — RSI
+- [x] Strategy 3 — MACD
+- [x] Backtesting engine with metrics (return, drawdown, Sharpe ratio)
+- [x] Streamlit dashboard — signal viewer and portfolio tracker
+- [x] Paper trading via Alpaca API
 - [ ] Live trading (after paper trading validation)
